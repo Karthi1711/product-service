@@ -43,6 +43,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-redis')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile ('commons-beanutils:commons-beanutils:1.6')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
