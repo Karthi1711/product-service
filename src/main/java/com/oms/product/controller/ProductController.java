@@ -29,4 +29,17 @@ public class ProductController {
         return productService.getProduct(id);
     }
 
+    @DeleteMapping("/cancel/{id}")
+    @ResponseStatus(HttpStatus.GONE)
+    public void cancelProduct(@PathVariable String id) {
+        productService.cancelProduct(id);
+    }
+
+    @GetMapping("/searchAllProducts")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ProductResponse searchAllProducts() {
+        return productService.searchAllProducts();
+    }
+
+
 }
