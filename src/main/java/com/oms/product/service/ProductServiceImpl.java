@@ -42,6 +42,16 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    public ProductResponse getProduct (String id){
+        ProductResponse productResponse = new ProductResponse();
+        ProductEntity productEntity = productRepository.findOne(id);
+        ProductDTO productDTO = entityToDomain(productEntity);
+        List<ProductDTO> products = new ArrayList<ProductDTO>();
+        products.add(productDTO);
+        productResponse.setProducts(products);
+        return productResponse;
+    }
+
     private ProductEntity domainToEntity(ProductDTO productDTO) {
         ProductEntity productEntity = new ProductEntity();
         if (productDTO.getCreatedDate() == null)

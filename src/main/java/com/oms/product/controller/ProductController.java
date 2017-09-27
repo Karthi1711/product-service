@@ -19,8 +19,14 @@ public class ProductController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponse addProduct(@RequestBody ProductRequest productRequest){
-       return productService.addProduct(productRequest);
+    public ProductResponse addProduct(@RequestBody ProductRequest productRequest) {
+        return productService.addProduct(productRequest);
+    }
+
+    @GetMapping("/get/{id}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ProductResponse getProduct(@PathVariable String id) {
+        return productService.getProduct(id);
     }
 
 }
