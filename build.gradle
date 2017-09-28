@@ -8,7 +8,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-
 	}
 }
 
@@ -95,7 +94,7 @@ task runAcceptance(type: Test) {
 	description = 'Runs the acceptance tests'
 	systemProperties System.properties
 	group = 'verification'
-	testClassesDir = sourceSets.acceptance.output.classesDir
+	testClassesDirs = sourceSets.acceptance.output.classesDirs
 	classpath = sourceSets.acceptance.runtimeClasspath
 	reports.junitXml.destination = new File(buildDir, 'groovy/acceptance-results')
 	reports.html.destination = new File(buildDir, 'groovy/reports/acceptance')
