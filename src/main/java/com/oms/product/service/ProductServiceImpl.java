@@ -6,6 +6,7 @@ import com.oms.product.model.request.ProductRequest;
 import com.oms.product.model.response.ProductResponse;
 import com.oms.product.repository.ProductRepository;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +23,8 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
+    @Value("${message.oderPaymentExchange: unknown}")
+    private String oderPaymentExchange;
 
     public ProductResponse addProduct(ProductRequest productRequest) {
         ProductResponse productResponse = new ProductResponse();
@@ -49,6 +52,11 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDTO> products = new ArrayList<ProductDTO>();
         products.add(productDTO);
         productResponse.setProducts(products);
+        /*
+        TODO
+        just for testing config server connection needs to be removed
+         */
+        System.out.print("*******oderPaymentExchange:"+oderPaymentExchange);
         return productResponse;
     }
 
