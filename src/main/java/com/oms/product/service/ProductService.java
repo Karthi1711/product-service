@@ -9,6 +9,6 @@ public interface ProductService {
     public ProductResponse getProduct (String id);
     public void cancelProduct (String id);
     public ProductResponse searchAllProducts();
-
+    public ProductResponse searchProductsByName(String name);
 
 }

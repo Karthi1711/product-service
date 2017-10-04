@@ -9,6 +9,8 @@ import java.util.Date;
 public class ProductDTO {
 
     private String id;
+
+
     private String productDisplayName;
     private String description;
     private Double price;
@@ -80,4 +82,6 @@ public class ProductDTO {
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+
+
 }
