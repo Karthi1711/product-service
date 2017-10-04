@@ -11,3 +11,4 @@ applications:
     - oms-circuitbreaker
     - oms-mongo
     - oms-redis
+    - oms-configserver
