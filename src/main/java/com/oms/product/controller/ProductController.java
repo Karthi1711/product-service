@@ -7,6 +7,8 @@ import com.oms.product.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * Service  Name: Product Service
  * File Name : ProductController.java
@@ -26,7 +28,7 @@ public class ProductController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponse addProduct(@RequestBody ProductRequest productRequest) {
+    public ProductResponse addProduct(@Valid @RequestBody ProductRequest productRequest) {
         return productService.addProduct(productRequest);
     }
 
