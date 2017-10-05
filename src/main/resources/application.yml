@@ -4,9 +4,9 @@ info:
 spring:
   application:
     name: product-service
-data:
-  mongodb:
-    uri: mongodb://localhost:27017/OMS
+#data:
+  #mongodb:
+    #uri: mongodb://localhost:27017/OMS
 
 security:
   basic:
