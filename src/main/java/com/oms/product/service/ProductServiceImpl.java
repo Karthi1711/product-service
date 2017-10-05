@@ -2,6 +2,7 @@ package com.oms.product.service;
 
 import com.oms.product.exception.DomainToEntityConversionFailedException;
 import com.oms.product.exception.EntityToDomainConversionFailedException;
+import com.oms.product.exception.ProductNameExistingException;
 import com.oms.product.exception.ProductNotFoundException;
 import com.oms.product.model.domain.ProductDTO;
 import com.oms.product.model.entity.ProductEntity;
@@ -34,17 +35,36 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductResponse addProduct(ProductRequest productRequest) {
         ProductResponse productResponse = new ProductResponse();
-        List<ProductEntity> productEntityList = convertToProductEntityList(productRequest.getProducts());
-
+        productRequest.getProducts().forEach(productDTO -> {
+                    String productName = productDTO.getProductDisplayName();
+                    ProductEntity productEntityFound = productRepository.findByProductDisplayName(productName);
+                    if (productEntityFound != null) {
+                        throw new ProductNameExistingException("Product name is already existing - " + productName);
+                    }
+                }
+        );
+        List<ProductEntity> productEntityList = convertToProductEntityList(productRequest.getProducts(), "ADD");
         List<ProductEntity> productEntityListReturned = productRepository.insert(productEntityList);
         productResponse.setProducts(convertToProductDtoList(productEntityListReturned));
         return productResponse;
     }
 
-    private List<ProductEntity> convertToProductEntityList(List<ProductDTO> productDTOList) {
+    public ProductDTO updateProductByName(ProductRequest productRequest) {
+        ProductDTO productDTO = productRequest.getProducts().get(0);
+        String productName = productDTO.getProductDisplayName();
+        ProductEntity productEntityFound = productRepository.findByProductDisplayName(productName);
+        if (productEntityFound == null) {
+            throw new ProductNotFoundException("Product is not fund for given product name - " + productName);
+        }
+        ProductEntity productEntity = domainToEntity(productDTO, "UPDATE");
+        ProductEntity productEntityRetrieved = productRepository.updateProductByName(productEntity);
+        return entityToDomain(productEntityRetrieved);
+    }
+
+    private List<ProductEntity> convertToProductEntityList(List<ProductDTO> productDTOList, String operation) {
         List<ProductEntity> productEntityList = new ArrayList<ProductEntity>();
         productDTOList.forEach(productDTO -> {
-            productEntityList.add(domainToEntity(productDTO));
+            productEntityList.add(domainToEntity(productDTO, operation));
         });
         return productEntityList;
     }
@@ -89,17 +109,19 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductResponse searchProductsByName(String name) {
         ProductResponse productResponse = new ProductResponse();
-        List<ProductEntity> productEntityListReturned = productRepository.findByProductDisplayName(name);
-        productResponse.setProducts(convertToProductDtoList(productEntityListReturned));
+        ProductEntity productEntityReturned = productRepository.findByProductDisplayName(name);
+        List<ProductDTO> products = new ArrayList<ProductDTO>();
+        products.add(entityToDomain(productEntityReturned));
+        productResponse.setProducts(products);
         return productResponse;
     }
 
-    private ProductEntity domainToEntity(ProductDTO productDTO) {
+    private ProductEntity domainToEntity(ProductDTO productDTO, String Operation) {
         ProductEntity productEntity = new ProductEntity();
-        if (productDTO.getCreatedDate() == null)
+        if (Operation.equalsIgnoreCase("ADD")) {
             productDTO.setCreatedDate(new Date());
-        if (productDTO.getLastModifiedDate() == null)
-            productDTO.setLastModifiedDate(new Date());
+        }
+        productDTO.setLastModifiedDate(new Date());
         try {
             BeanUtils.copyProperties(productEntity, productDTO);
         } catch (IllegalAccessException | InvocationTargetException ex) {

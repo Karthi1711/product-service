@@ -1,9 +1,9 @@
 package com.oms.product.controller;
 
+import com.oms.product.model.domain.ProductDTO;
 import com.oms.product.model.request.ProductRequest;
 import com.oms.product.model.response.ProductResponse;
 import com.oms.product.service.ProductService;
-import com.oms.product.service.ProductServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * Service  Name: Product Service
  * File Name : ProductController.java
  * Description : Managing Product Details
- * Store ID : None
+ * Story ID : None
  * Dependent Service : Inventory-Service
  */
 @RestController
@@ -28,6 +28,12 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProductResponse addProduct(@RequestBody ProductRequest productRequest) {
         return productService.addProduct(productRequest);
+    }
+
+    @PostMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductDTO updateProductByName(@RequestBody ProductRequest productRequest) {
+        return productService.updateProductByName(productRequest);
     }
 
     @GetMapping("/get/{id}")
