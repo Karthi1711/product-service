@@ -7,13 +7,20 @@ import com.oms.product.service.ProductServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Service  Name: Product Service
+ * File Name : ProductController.java
+ * Description : Managing Product Details
+ * Store ID : None
+ * Dependent Service : Inventory-Service
+ */
 @RestController
 @RequestMapping("/Product")
 public class ProductController {
 
     private ProductService productService;
 
-    public ProductController(ProductServiceImpl productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -39,6 +46,12 @@ public class ProductController {
     @ResponseStatus(HttpStatus.FOUND)
     public ProductResponse searchAllProducts() {
         return productService.searchAllProducts();
+    }
+
+    @GetMapping("/searchByName/{name}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public ProductResponse searchByName(@PathVariable String name) {
+        return productService.searchProductsByName(name);
     }
 
 

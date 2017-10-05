@@ -14,6 +14,7 @@ public class ProductEntity {
 
     @Id
     private String id;
+
     private String productDisplayName;
     private String description;
     private Double price;
@@ -25,6 +26,7 @@ public class ProductEntity {
 
     @DateTimeFormat
     private Date lastModifiedDate;
+
 
     public String getId() {
         return id;
@@ -89,4 +91,5 @@ public class ProductEntity {
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+
 }

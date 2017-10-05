@@ -7,6 +7,7 @@ public class Specifications {
     private String name;
     private String value;
 
+
     public String getName() {
         return name;
     }
@@ -22,8 +23,4 @@ public class Specifications {
     public void setValue(String value) {
         this.value = value;
     }
-
-
-
-
 }

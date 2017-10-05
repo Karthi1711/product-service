@@ -6,13 +6,15 @@ spring:
     name: product-service
 #data:
   #mongodb:
-  #uri: mongodb://localhost:27017/OMS
+    #uri: mongodb://localhost:27017/OMS
 
 security:
   basic:
     enabled: false
 logging:
-  level: error
-      #com.oms.product: debug
+  level:
+    root: DEBUG
+    org.springframework.web: ERROR
+    com.oms.product: DEBUG
 server:
   port: 9092

@@ -3,7 +3,6 @@ package com.oms.product.model;
 
 public class PackingInfo {
     private Double weight;
-    private Dimensions dimensions;
 
     public Double getWeight() {
         return weight;
@@ -17,7 +16,11 @@ public class PackingInfo {
         return dimensions;
     }
 
-    public void setDimensionsDTO(Dimensions dimensions) {
+    public void setDimensions(Dimensions dimensions) {
         this.dimensions = dimensions;
     }
+
+    private Dimensions dimensions;
+
+
 }
