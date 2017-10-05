@@ -1,6 +1,7 @@
 package com.oms.product.service;
 
 
+import com.oms.product.model.domain.ProductDTO;
 import com.oms.product.model.request.ProductRequest;
 import com.oms.product.model.response.ProductResponse;
 
@@ -10,5 +11,6 @@ public interface ProductService {
     public void cancelProduct (String id);
     public ProductResponse searchAllProducts();
     public ProductResponse searchProductsByName(String name);
+    public ProductDTO updateProductByName(ProductRequest productRequest);
 
 }
