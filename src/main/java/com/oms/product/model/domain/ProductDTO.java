@@ -21,7 +21,7 @@ public class ProductDTO {
     private String productDisplayName;
 
     @NotBlank(message = "Product description can't be blank")
-    @Size(min = 10, max = 15)
+    @Size(min = 10, max = 25)
     private String description;
 
     @DecimalMin(value = "1.00", message = "Price must be higher than ${value}")
