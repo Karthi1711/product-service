@@ -10,7 +10,7 @@ public interface ProductService {
     public ProductResponse getProduct (String id);
     public void cancelProduct (String id);
     public ProductResponse searchAllProducts();
-    public ProductResponse searchProductsByName(String name);
-    public ProductDTO updateProductDetails(ProductRequest productRequest);
+    public ProductResponse searchProductsByName(String name,boolean isLike);
+    public ProductDTO updateProductDetails(ProductDTO productDTO);
 
 }

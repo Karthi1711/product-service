@@ -48,8 +48,7 @@ public class ProductServiceImpl implements ProductService {
         return productResponse;
     }
 
-    public ProductDTO updateProductDetails(ProductRequest productRequest) {
-        ProductDTO productDTO = productRequest.getProducts().get(0);
+    public ProductDTO updateProductDetails(ProductDTO productDTO) {
         String productId = productDTO.getId();
         ProductEntity productEntityFound = productRepository.findOne(productId);
         if (productEntityFound == null) {
@@ -120,15 +119,26 @@ public class ProductServiceImpl implements ProductService {
         return productResponse;
     }
 
-    public ProductResponse searchProductsByName(String name) {
+    public ProductResponse searchProductsByName(String name, boolean isLike) {
         ProductResponse productResponse = new ProductResponse();
-        ProductEntity productEntityReturned = productRepository.findByProductDisplayName(name);
-        if (productEntityReturned!=null) {
-            List<ProductDTO> products = new ArrayList<ProductDTO>();
-            products.add(entityToDomain(productEntityReturned));
-            productResponse.setProducts(products);
-        }else{
-            throw new ProductNotFoundException("Product(s) not found for the given name -" + name);
+        ProductEntity productEntityReturned;
+        List<ProductEntity> productEntityList;
+        if (!isLike) {
+            productEntityReturned = productRepository.findByProductDisplayName(name);
+            if (productEntityReturned != null) {
+                List<ProductDTO> products = new ArrayList<ProductDTO>();
+                products.add(entityToDomain(productEntityReturned));
+                productResponse.setProducts(products);
+            } else {
+                throw new ProductNotFoundException("Product(s) not found for the given name -" + name);
+            }
+        } else {
+            productEntityList = productRepository.findByProductDisplayNameIsLike(name);
+            if (CollectionUtils.isNotEmpty(productEntityList)) {
+                productResponse.setProducts(convertToProductDtoList(productEntityList));
+            } else {
+                throw new ProductNotFoundException("Product(s) not found for the given name -" + name);
+            }
         }
         return productResponse;
     }
