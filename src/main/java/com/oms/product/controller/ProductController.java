@@ -34,8 +34,8 @@ public class ProductController {
 
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDTO updateProductByName(@Valid @RequestBody ProductRequest productRequest) {
-        return productService.updateProductByName(productRequest);
+    public ProductDTO updateProductDetails(@Valid @RequestBody ProductRequest productRequest) {
+        return productService.updateProductDetails(productRequest);
     }
 
     @GetMapping("/get/{id}")

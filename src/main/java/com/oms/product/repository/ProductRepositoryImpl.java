@@ -20,8 +20,12 @@ public class ProductRepositoryImpl implements ProductCustomRepository {
     MongoTemplate mongoTemplate;
 
     public ProductEntity updateProductByName(ProductEntity productEntity) {
-        Query query = new Query(Criteria.where("productDisplayName").is(productEntity.getProductDisplayName()));
+        Query query = new Query(Criteria.where("_id").is(productEntity.getId()));
         Update update = new Update();
+
+        String productDisplayName = productEntity.getProductDisplayName();
+        if(productDisplayName!=null && !productDisplayName.isEmpty())
+            update.set("productDisplayName", productDisplayName);
 
         String description = productEntity.getDescription();
         if (description != null && !description.isEmpty())

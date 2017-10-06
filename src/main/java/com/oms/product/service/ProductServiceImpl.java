@@ -1,21 +1,20 @@
 package com.oms.product.service;
 
-import com.oms.product.exception.DomainToEntityConversionFailedException;
-import com.oms.product.exception.EntityToDomainConversionFailedException;
 import com.oms.product.exception.ProductNameExistingException;
 import com.oms.product.exception.ProductNotFoundException;
+import com.oms.product.model.Dimensions;
+import com.oms.product.model.PackingInfo;
+import com.oms.product.model.Specifications;
 import com.oms.product.model.domain.ProductDTO;
 import com.oms.product.model.entity.ProductEntity;
 import com.oms.product.model.request.ProductRequest;
 import com.oms.product.model.response.ProductResponse;
 import com.oms.product.repository.ProductRepository;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,26 +48,51 @@ public class ProductServiceImpl implements ProductService {
         return productResponse;
     }
 
-    public ProductDTO updateProductByName(ProductRequest productRequest) {
+    public ProductDTO updateProductDetails(ProductRequest productRequest) {
         ProductDTO productDTO = productRequest.getProducts().get(0);
-        String productName = productDTO.getProductDisplayName();
-        ProductEntity productEntityFound = productRepository.findByProductDisplayName(productName);
+        String productId = productDTO.getId();
+        ProductEntity productEntityFound = productRepository.findOne(productId);
         if (productEntityFound == null) {
-            throw new ProductNotFoundException("Product is not fund for given product name - " + productName);
+            throw new ProductNotFoundException("Product is not fund for given product name - " + productId);
         }
-        ProductEntity productEntity = domainToEntity(productDTO, "UPDATE");
-        ProductEntity productEntityRetrieved = productRepository.updateProductByName(productEntity);
+        ProductEntity productEntityToBeUpdated = deriveDifferenceToBeUpdated(productDTO, productEntityFound);
+        ProductEntity productEntityRetrieved = productRepository.updateProductByName(productEntityToBeUpdated);
         return entityToDomain(productEntityRetrieved);
     }
 
-    private List<ProductEntity> convertToProductEntityList(List<ProductDTO> productDTOList, String operation) {
-        List<ProductEntity> productEntityList = new ArrayList<ProductEntity>();
-        productDTOList.forEach(productDTO -> {
-            productEntityList.add(domainToEntity(productDTO, operation));
-        });
-        return productEntityList;
+    private ProductEntity deriveDifferenceToBeUpdated(ProductDTO productDTO, ProductEntity productEntityFound) {
+        ProductEntity productEntityToBeUpdated = new ProductEntity();
+        productEntityToBeUpdated.setId(productDTO.getId());
+        productEntityToBeUpdated.setLastModifiedDate(new Date());
+        productEntityToBeUpdated.filedValueIfUpdated(productDTO.getProductDisplayName(), productEntityFound.getProductDisplayName(), productEntityToBeUpdated::setProductDisplayName);
+        productEntityToBeUpdated.filedValueIfUpdated(productDTO.getDescription(), productEntityFound.getDescription(), productEntityToBeUpdated::setDescription);
+        productEntityToBeUpdated.filedValueIfUpdated(productDTO.getPrice(), productEntityFound.getPrice(), productEntityToBeUpdated::setPrice);
+        productEntityToBeUpdated.setSpecifications(deriveDifferenceToBeUpdated(productDTO.getSpecifications(), productEntityFound.getSpecifications()));
+        productEntityToBeUpdated.setPackingInfo(deriveDifferenceToBeUpdated(productDTO.getPackingInfo(), productEntityFound.getPackingInfo()));
+        return productEntityToBeUpdated;
     }
 
+    private Specifications deriveDifferenceToBeUpdated(Specifications specificationsSource, Specifications specificationsTarget) {
+        Specifications specificationsToBeUpdated = new Specifications();
+        specificationsToBeUpdated.filedValueIfUpdated(specificationsSource.getName(), specificationsTarget.getName(), specificationsToBeUpdated::setName);
+        specificationsToBeUpdated.filedValueIfUpdated(specificationsSource.getValue(), specificationsTarget.getValue(), specificationsToBeUpdated::setValue);
+        return specificationsToBeUpdated;
+    }
+
+    private PackingInfo deriveDifferenceToBeUpdated(PackingInfo packingInfoSource, PackingInfo packingInfoTarget) {
+        PackingInfo packingInfoToBeUpdated = new PackingInfo();
+        packingInfoToBeUpdated.filedValueIfUpdated(packingInfoSource.getWeight(), packingInfoTarget.getWeight(), packingInfoToBeUpdated::setWeight);
+        packingInfoToBeUpdated.setDimensions(deriveDifferenceToBeUpdated(packingInfoSource.getDimensions(), packingInfoTarget.getDimensions()));
+        return packingInfoToBeUpdated;
+    }
+
+    private Dimensions deriveDifferenceToBeUpdated(Dimensions dimensionsSource, Dimensions dimensionsTarget) {
+        Dimensions dimensionsToBeUpdated = new Dimensions();
+        dimensionsToBeUpdated.filedValueIfUpdated(dimensionsSource.getWeight(), dimensionsTarget.getWeight(), dimensionsToBeUpdated::setWeight);
+        dimensionsToBeUpdated.filedValueIfUpdated(dimensionsSource.getHeight(), dimensionsTarget.getHeight(), dimensionsToBeUpdated::setHeight);
+        dimensionsToBeUpdated.filedValueIfUpdated(dimensionsSource.getDepth(), dimensionsTarget.getDepth(), dimensionsToBeUpdated::setDepth);
+        return dimensionsToBeUpdated;
+    }
 
     public ProductResponse getProduct(String id) {
         ProductResponse productResponse = new ProductResponse();
@@ -96,6 +120,27 @@ public class ProductServiceImpl implements ProductService {
         return productResponse;
     }
 
+    public ProductResponse searchProductsByName(String name) {
+        ProductResponse productResponse = new ProductResponse();
+        ProductEntity productEntityReturned = productRepository.findByProductDisplayName(name);
+        if (productEntityReturned!=null) {
+            List<ProductDTO> products = new ArrayList<ProductDTO>();
+            products.add(entityToDomain(productEntityReturned));
+            productResponse.setProducts(products);
+        }else{
+            throw new ProductNotFoundException("Product(s) not found for the given name -" + name);
+        }
+        return productResponse;
+    }
+
+
+    private List<ProductEntity> convertToProductEntityList(List<ProductDTO> productDTOList, String operation) {
+        List<ProductEntity> productEntityList = new ArrayList<ProductEntity>();
+        productDTOList.forEach(productDTO -> {
+            productEntityList.add(domainToEntity(productDTO, operation));
+        });
+        return productEntityList;
+    }
 
     private List<ProductDTO> convertToProductDtoList(List<ProductEntity> productEntityListReturned) {
         List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
@@ -107,38 +152,26 @@ public class ProductServiceImpl implements ProductService {
         return productDTOList;
     }
 
-    public ProductResponse searchProductsByName(String name) {
-        ProductResponse productResponse = new ProductResponse();
-        ProductEntity productEntityReturned = productRepository.findByProductDisplayName(name);
-        List<ProductDTO> products = new ArrayList<ProductDTO>();
-        products.add(entityToDomain(productEntityReturned));
-        productResponse.setProducts(products);
-        return productResponse;
-    }
-
     private ProductEntity domainToEntity(ProductDTO productDTO, String Operation) {
-        ProductEntity productEntity = new ProductEntity();
-        if (Operation.equalsIgnoreCase("ADD")) {
-            productDTO.setCreatedDate(new Date());
-        }
-        productDTO.setLastModifiedDate(new Date());
-        try {
-            BeanUtils.copyProperties(productEntity, productDTO);
-        } catch (IllegalAccessException | InvocationTargetException ex) {
-            LOGGER.error("message=Domain To Entity Conversion Of Product Details failed. exception={}", ex);
-            throw new DomainToEntityConversionFailedException("Customer Domain To Entity Conversion Failed: " + productDTO.getProductDisplayName());
-        }
-        return productEntity;
+        return new ProductEntity().setId(productDTO.getId())
+                .setProductDisplayName(productDTO.getProductDisplayName())
+                .setDescription(productDTO.getDescription())
+                .setCreatedDate(new Date())
+                .setLastModifiedDate(new Date())
+                .setPrice(productDTO.getPrice())
+                .setPackingInfo(productDTO.getPackingInfo())
+                .setSpecifications(productDTO.getSpecifications());
     }
 
     private ProductDTO entityToDomain(ProductEntity productEntity) {
-        ProductDTO productDTO = new ProductDTO();
-        try {
-            BeanUtils.copyProperties(productDTO, productEntity);
-        } catch (IllegalAccessException | InvocationTargetException ex) {
-            LOGGER.error("message=Entity To Domain Conversion Of Product Details failed. exception={}", ex);
-            throw new EntityToDomainConversionFailedException("Customer Entity To Domain Conversion Failed: " + productEntity.getProductDisplayName());
-        }
-        return productDTO;
+        return new ProductDTO().setId(productEntity.getId())
+                .setProductDisplayName(productEntity.getProductDisplayName())
+                .setDescription(productEntity.getDescription())
+                .setCreatedDate(productEntity.getCreatedDate())
+                .setLastModifiedDate(productEntity.getLastModifiedDate())
+                .setPrice(productEntity.getPrice())
+                .setPackingInfo(productEntity.getPackingInfo())
+                .setSpecifications(productEntity.getSpecifications());
     }
+
 }
