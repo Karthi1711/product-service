@@ -34,8 +34,8 @@ public class ProductController {
 
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDTO updateProductDetails(@Valid @RequestBody ProductRequest productRequest) {
-        return productService.updateProductDetails(productRequest);
+    public ProductDTO updateProductDetails(@Valid @RequestBody ProductDTO productDTO) {
+        return productService.updateProductDetails(productDTO);
     }
 
     @GetMapping("/get/{id}")
@@ -58,8 +58,8 @@ public class ProductController {
 
     @GetMapping("/searchByName/{name}")
     @ResponseStatus(HttpStatus.FOUND)
-    public ProductResponse searchByName(@PathVariable String name) {
-        return productService.searchProductsByName(name);
+    public ProductResponse searchByName(@RequestParam(required = false) boolean isLike,@PathVariable String name) {
+        return productService.searchProductsByName(name,isLike);
     }
 
 
