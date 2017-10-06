@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.function.Function;
 
 @Document(collection = "Product")
 public class ProductEntity {
@@ -32,64 +33,77 @@ public class ProductEntity {
         return id;
     }
 
-    public void setId(String id) {
+    public ProductEntity setId(String id) {
         this.id = id;
+        return this;
     }
 
     public String getProductDisplayName() {
         return productDisplayName;
     }
 
-    public void setProductDisplayName(String productDisplayName) {
+    public ProductEntity setProductDisplayName(String productDisplayName) {
         this.productDisplayName = productDisplayName;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public ProductEntity setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public ProductEntity setPrice(Double price) {
         this.price = price;
+        return this;
     }
 
     public PackingInfo getPackingInfo() {
         return packingInfo;
     }
 
-    public void setPackingInfo(PackingInfo packingInfo) {
+    public ProductEntity setPackingInfo(PackingInfo packingInfo) {
         this.packingInfo = packingInfo;
+        return this;
     }
 
     public Specifications getSpecifications() {
         return specifications;
     }
 
-    public void setSpecifications(Specifications specifications) {
+    public ProductEntity setSpecifications(Specifications specifications) {
         this.specifications = specifications;
+        return this;
     }
 
     public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public ProductEntity setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+        return this;
     }
 
     public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
+    public ProductEntity setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+        return this;
     }
 
+    public <T>  void filedValueIfUpdated(T targetValue, T sourceValue, Function<T,?> diffSetter){
+        if(targetValue!=null && !targetValue.equals(sourceValue)){
+            diffSetter.apply(targetValue);
+        }
+    }
 }

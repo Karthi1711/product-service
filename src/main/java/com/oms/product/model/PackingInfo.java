@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import java.util.function.Function;
 
 public class PackingInfo {
 
@@ -21,17 +22,24 @@ public class PackingInfo {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public PackingInfo setWeight(Double weight) {
         this.weight = weight;
+        return this;
     }
 
     public Dimensions getDimensions() {
         return dimensions;
     }
 
-    public void setDimensions(Dimensions dimensions) {
+    public PackingInfo setDimensions(Dimensions dimensions) {
         this.dimensions = dimensions;
+        return this;
     }
 
+    public <T>  void filedValueIfUpdated(T targetValue, T sourceValue, Function<T,?> diffSetter){
+        if(targetValue!=null && !targetValue.equals(sourceValue)){
+            diffSetter.apply(targetValue);
+        }
+    }
 
 }

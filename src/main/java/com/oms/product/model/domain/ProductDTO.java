@@ -43,64 +43,72 @@ public class ProductDTO {
         return id;
     }
 
-    public void setId(String id) {
+    public ProductDTO setId(String id) {
         this.id = id;
+        return this;
     }
 
     public String getProductDisplayName() {
         return productDisplayName;
     }
 
-    public void setProductDisplayName(String productDisplayName) {
+    public ProductDTO setProductDisplayName(String productDisplayName) {
         this.productDisplayName = productDisplayName;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public ProductDTO setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public ProductDTO setPrice(Double price) {
         this.price = price;
+        return this;
     }
 
     public PackingInfo getPackingInfo() {
         return packingInfo;
     }
 
-    public void setPackingInfo(PackingInfo packingInfo) {
+    public ProductDTO setPackingInfo(PackingInfo packingInfo) {
         this.packingInfo = packingInfo;
+        return this;
     }
 
     public Specifications getSpecifications() {
         return specifications;
     }
 
-    public void setSpecifications(Specifications specifications) {
+    public ProductDTO setSpecifications(Specifications specifications) {
         this.specifications = specifications;
+        return this;
     }
 
     public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public ProductDTO setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+        return this;
     }
 
     public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
+    public ProductDTO setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+        return this;
     }
 
 

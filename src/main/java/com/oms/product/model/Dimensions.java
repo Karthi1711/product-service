@@ -3,6 +3,7 @@ package com.oms.product.model;
 
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
+import java.util.function.Function;
 
 public class Dimensions {
 
@@ -23,23 +24,32 @@ public class Dimensions {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public Dimensions setWeight(Double weight) {
         this.weight = weight;
+        return this;
     }
 
     public Double getHeight() {
         return height;
     }
 
-    public void setHeight(Double height) {
+    public Dimensions setHeight(Double height) {
         this.height = height;
+        return this;
     }
 
     public Double getDepth() {
         return depth;
     }
 
-    public void setDepth(Double depth) {
+    public Dimensions setDepth(Double depth) {
         this.depth = depth;
+        return this;
+    }
+
+    public <T>  void filedValueIfUpdated(T targetValue, T sourceValue, Function<T,?> diffSetter){
+        if(targetValue!=null && !targetValue.equals(sourceValue)){
+            diffSetter.apply(targetValue);
+        }
     }
 }

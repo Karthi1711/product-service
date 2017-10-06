@@ -11,6 +11,6 @@ public interface ProductService {
     public void cancelProduct (String id);
     public ProductResponse searchAllProducts();
     public ProductResponse searchProductsByName(String name);
-    public ProductDTO updateProductByName(ProductRequest productRequest);
+    public ProductDTO updateProductDetails(ProductRequest productRequest);
 
 }
