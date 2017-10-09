@@ -91,7 +91,6 @@ class ProductServiceSpec extends Specification {
             it.description == 'testDescription'
         }) >> productEntityReturned
         productDtoResponse
-        productDtoResponse.products.size() == 1
         productDtoResponse.id == id
         productDtoResponse.productDisplayName == 'testProduct'
         productDtoResponse.description == 'testDescription'
