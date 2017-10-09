@@ -8,6 +8,19 @@ spring:
   #mongodb:
     #uri: mongodb://localhost:27017/OMS
 
+
+oms:
+  appKey: product-service
+  common:
+    web:
+      config:
+        swagger:
+          controllerPackage: com.oms.product.controller
+          author: Michael Philomin Raj
+          apiName: Pustomer-service
+          apiVersion: 1.0.0
+          apiDescription: API for Pustomer-service
+
 security:
   basic:
     enabled: false
