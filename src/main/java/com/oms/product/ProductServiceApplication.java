@@ -39,7 +39,7 @@ public class ProductServiceApplication {
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(getHttpClient());
         return factory;
     }
-    @LoadBalanced
+    //@LoadBalanced
     @Bean
     public RestTemplate getRestTemplate() {
         RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
