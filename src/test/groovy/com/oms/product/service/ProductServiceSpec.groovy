@@ -1,5 +1,6 @@
 package com.oms.product.service
 
+import com.oms.product.delegate.ProductDelegate
 import com.oms.product.model.Dimensions
 import com.oms.product.model.PackingInfo
 import com.oms.product.model.Specifications
@@ -15,11 +16,14 @@ class ProductServiceSpec extends Specification {
 
     ProductService subject
 
+    ProductDelegate productDelegate
+
     ProductRepository productRepository
 
     def setup() {
+        productDelegate = Mock ProductDelegate
         productRepository = Mock ProductRepository
-        subject = new ProductServiceImpl(productRepository)
+        subject = new ProductServiceImpl(productRepository,productDelegate)
     }
 
 

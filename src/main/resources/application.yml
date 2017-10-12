@@ -17,7 +17,7 @@ oms:
         swagger:
           controllerPackage: com.oms.product.controller
           author: Michael Philomin Raj
-          apiName: Pustomer-service
+          apiName: Product-service
           apiVersion: 1.0.0
           apiDescription: API for Pustomer-service
 
@@ -31,3 +31,5 @@ logging:
     com.oms.product: DEBUG
 server:
   port: 9092
+#url:
+#inventoryServiceURL: http://localhost:9099/inventory/deleteProductRecord
