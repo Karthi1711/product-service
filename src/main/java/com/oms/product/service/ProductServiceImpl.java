@@ -1,5 +1,6 @@
 package com.oms.product.service;
 
+import com.oms.product.delegate.ProductDelegate;
 import com.oms.product.exception.ProductNameExistingException;
 import com.oms.product.exception.ProductNotFoundException;
 import com.oms.product.model.Dimensions;
@@ -24,10 +25,13 @@ public class ProductServiceImpl implements ProductService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
 
+    private ProductDelegate productDelegate;
 
     private ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+
+    public ProductServiceImpl(ProductRepository productRepository,ProductDelegate productDelegate) {
+        this.productDelegate = productDelegate;
         this.productRepository = productRepository;
     }
 
@@ -109,6 +113,7 @@ public class ProductServiceImpl implements ProductService {
 
     public void cancelProduct(String id) {
         productRepository.delete(id);
+        productDelegate.deleteProductFromInventory(id);
     }
 
     public ProductResponse searchAllProducts() {
