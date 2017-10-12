@@ -32,4 +32,4 @@ logging:
 server:
   port: 9092
 #url:
-#inventoryServiceURL: http://localhost:9099/inventory/deleteProductRecord
+  #inventoryServiceURL: http://localhost:9099/inventory/deleteProductRecord
