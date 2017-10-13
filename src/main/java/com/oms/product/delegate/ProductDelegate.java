@@ -26,6 +26,7 @@ public class ProductDelegate {
         List<String> productIdList = new ArrayList<String>();
         productIdList.add(productId);
         LOGGER.info("message={}", "Before Calling Inventory To Remove Count Details");
+        LOGGER.info("Inventory Service URL for IPC call={}", inventoryService_url);
         restTemplate.postForObject(inventoryService_url, productIdList, String.class);
         LOGGER.info("message={}", "After Successfully Removing Count Details From Inventory");
     }
