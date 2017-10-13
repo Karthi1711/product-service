@@ -23,7 +23,7 @@ oms:
 
 security:
   basic:
-    enabled: true
+    enabled: false
 logging:
   level:
     root: DEBUG
